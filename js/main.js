@@ -59,14 +59,14 @@ function loadCompanyData(tag = null){
 
 
 windowTemplate = (companyObj) => {
-    const description = companyObj.description ? `${companyObj.category_code}` : `n/a`
+    const description = companyObj.description ? `${companyObj.description}` : `n/a`
     const tags = companyObj.tag_list ? companyObj.tag_list.split(", ").map((x) => `<li>${x}</li>`).join('') : `n/a`;
     const products = companyObj.products ? companyObj.products.map((x) => `<li>${x.name}</li>`).join('') : `n/a`;
     const employees = companyObj.number_of_employees ? `${companyObj.number_of_employees}` : `n/a`;
     const person = companyObj.relationships.length>0 ?companyObj.relationships.map((x) => ` ${x.person.first_name} ${x.person.last_name} (${x.title})`).join('') : `n/a`;
     const date = companyObj.founded_year && companyObj.founded_month && companyObj.founded_day
           ? `${companyObj.founded_year}/${companyObj.founded_month}/${companyObj.founded_day}`
-          : '--';
+          : 'n/a';
 
     if (companyObj.offices[0].city !==null && companyObj.offices[0].city.length >0){
         var office = companyObj.offices.length > 0 ? `${companyObj.offices[0].city}` : `--`;
@@ -81,21 +81,22 @@ windowTemplate = (companyObj) => {
 
     return `<li class="list-group-item">
     <strong>Category:</strong> ${companyObj.category_code}<br/><br/>
-    <strong>Description:</strong> ${description}<br/><br/>
+    <strong>Description:</strong> ${companyObj.description ? `${companyObj.description}` : `n/a`}<br/><br/>
     <strong>Overview:</strong> ${companyObj.overview}
-    <strong>Tag List:</strong> <ul>${tags}</ul>
+    <strong>Tag List:</strong> <ul>${companyObj.tag_list ? companyObj.tag_list.split(", ").map((x) => `<li>${x}</li>`).join('') : `n/a`}</ul>
     <strong>Founded:</strong> ${date}<br/><br />
-    <strong>Key People:</strong> ${person}<br /><br />
+    <strong>Key People:</strong> ${companyObj.relationships.length>0 ?companyObj.relationships.map((x) => ` ${x.person.first_name} ${x.person.last_name} (${x.title})`).join('') : `n/a`}<br /><br />
     <strong>Products:</strong> 
-    <ul>${products}</ul>
-    <strong>Number of Employees:</strong> ${employees}<br/><br/>
-    <strong>Website:</strong> <a href="${companyObj.homepage_url}">${companyObj.homepage_url}</a><br/><br />
+    <ul>${companyObj.products ? companyObj.products.map((x) => `<li>${x.name}</li>`).join('') : `n/a`}</ul>
+    <strong>Number of Employees:</strong> ${companyObj.number_of_employees ? `${companyObj.number_of_employees}` : `n/a`}<br/><br/>
+    <strong>Website:</strong> ${companyObj.homepage_url ? `<a href="${companyObj.homepage_url}">${companyObj.homepage_url}</a>` : `n/a`}<br/><br />
     </li> `;
     }
 
 
 
 companyObjectToTableRowTemplate  = (companyObj ) => {
+        const website = companyObj.homepage_url ? `<a href="${companyObj.homepage_url}">${companyObj.homepage_url}</a>` : `--`
         const founder = companyObj.relationships.length>0 ? `${companyObj.relationships[0].person.first_name} ${companyObj.relationships[0].person.last_name}` : '--';
         const employees = companyObj.number_of_employees ? `${companyObj.number_of_employees}` : `--`;
         if (companyObj.offices[0].city !==null && companyObj.offices[0].city.length >0){
@@ -113,17 +114,17 @@ companyObjectToTableRowTemplate  = (companyObj ) => {
           : '--';
         const tags = companyObj.tag_list ? `${companyObj.tag_list.split(",")[0]}, ${companyObj.tag_list.split(",")[1]}` : `--`
         const description = companyObj.description ? `${companyObj.description}` : `--`
-        console.log(companyObj._id)
+        //console.log(companyObj._id)
         return  `<tr data-id=${companyObj.permalink}>
         <td>${companyObj.name}</td>
         <td>${companyObj.category_code}</td>
-        <td>${description}</td>
+        <td>${companyObj.description ? `${companyObj.description}` : `--`}</td>
         <td>${date}</td>
-        <td>${founder}</td>
+        <td>${companyObj.relationships.length>0 ? `${companyObj.relationships[0].person.first_name} ${companyObj.relationships[0].person.last_name}` : '--'}</td>
         <td>${office}</td>
-        <td>${employees}</td>
-        <td>${tags}</td>
-        <td><a href="${companyObj.homepage_url}">${companyObj.homepage_url}</a></td>
+        <td>${companyObj.number_of_employees ? `${companyObj.number_of_employees}` : `--`}</td>
+        <td>${companyObj.tag_list ? `${companyObj.tag_list.split(",")[0]}, ${companyObj.tag_list.split(",")[1]}` : `--`}</td>
+        <td>${companyObj.homepage_url ? `<a href="${companyObj.homepage_url}">${companyObj.homepage_url}</a>` : `--`}</td>
     </tr>`;
   } 
 
